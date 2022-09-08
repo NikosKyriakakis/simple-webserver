@@ -22,16 +22,17 @@ int send_msg(int sockfd, unsigned char *buffer)
     return 1;
 }
 
-int recv_msg(int sockfd, unsigned char *buffer)
+int recv_msg(int sockfd, unsigned char *buffer, const size_t buffer_size)
 {
     unsigned char *buffer_ref = buffer;
 
     int eol_index = 0;
+	size_t bytes = 0;
 
     const char *EOL = "\r\n";
     const unsigned char EOL_SIZE = 2;
 
-    while (recv(sockfd, buffer_ref, 1, 0) == 1) {
+    while (recv(sockfd, buffer_ref, 1, 0) == 1) { 
         if (*buffer_ref == EOL[eol_index]) {
             if (++eol_index == EOL_SIZE) {
                 *(buffer_ref + 1 - EOL_SIZE) = '\0';
@@ -40,7 +41,10 @@ int recv_msg(int sockfd, unsigned char *buffer)
         } else {
             eol_index = 0;
         }
-        buffer_ref++;
+        if (++bytes == buffer_size - 2)
+        	*buffer_ref = EOL[eol_index];
+        else
+        	buffer_ref++;
     }
 
     return 0;

@@ -77,7 +77,7 @@ static void handle_connection(int sockfd, struct sockaddr_in *client_addr)
 {
     int resource_fd;
     unsigned char request[MSG_SIZE], resource[MSG_SIZE];
-    int length = recv_msg(sockfd, request);
+    int length = recv_msg(sockfd, request, MSG_SIZE);
 
     printf (
         "Received request from %s:%d \'%s'\"\n", 
